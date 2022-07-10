@@ -1,3 +1,11 @@
 spring:
   application:
     name: eshop
+  datasource:
+    url: jdbc:mysql://rm-bp1p3t174nt16i896ko.mysql.rds.aliyuncs.com:9876/warehouse?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: dev
+    password: Wyfdgg72
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
