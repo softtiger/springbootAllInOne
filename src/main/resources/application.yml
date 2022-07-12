@@ -19,9 +19,3 @@ pagehelper:
   reasonable: false
   supportMethodsArguments: true
   params: count=countSql
-
-logging:
-  level:
-    self:
-      eshop:
-        dao: debug
