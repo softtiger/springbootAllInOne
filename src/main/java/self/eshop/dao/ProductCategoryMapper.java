@@ -1,8 +1,10 @@
 package self.eshop.dao;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import self.eshop.domain.ProductCategory;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Mapper
@@ -19,5 +21,5 @@ public interface ProductCategoryMapper {
 
     int updateByPrimaryKey(ProductCategory record);
 
-    List<ProductCategory> findAll();
+    List<ProductCategory> findAll(@Param("categoryName") String name);
 }

@@ -18,9 +18,9 @@ class IProductServicesTest {
     @Test
     void addProductCategory() {
         ProductCategory productCategory = new ProductCategory();
-        productCategory.setCategoryId(2);
-        productCategory.setCategoryName("电器");
-        productCategory.setCategoryType(Short.valueOf("1"));
+      //  productCategory.setCategoryId(2);
+        productCategory.setCategoryName("数码");
+        productCategory.setCategoryType(Short.valueOf("3"));
         productCategory.setCreateTime(new Date(System.currentTimeMillis()));
         productServices.addProductCategory(productCategory);
 
@@ -28,7 +28,7 @@ class IProductServicesTest {
 
     @Test
     void getAll() {
-        List<ProductCategory> productCategoryList = productServices.getAll();
-
+        List<ProductCategory> productCategoryList = productServices.getAll(0,5 ,"家居");
+        System.out.printf(" total result is %d",productCategoryList.size());
     }
 }

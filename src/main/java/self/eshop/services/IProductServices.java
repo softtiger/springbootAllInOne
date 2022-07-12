@@ -9,5 +9,5 @@ public interface IProductServices {
      public void addProductCategory(ProductCategory productCategory);
 
 
-     public List<ProductCategory> getAll();
+     public List<ProductCategory> getAll(int pageNo,int pageSize,String categoryName);
 }

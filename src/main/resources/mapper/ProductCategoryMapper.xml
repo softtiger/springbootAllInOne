@@ -18,10 +18,10 @@
     from product_category
     where category_id = #{categoryId,jdbcType=INTEGER}
   </select>
-  <select id="findAll" resultType="java.util.List">
+  <select id="findAll" resultType="self.eshop.domain.ProductCategory">
     select
     <include refid="Base_Column_List" />
-    from product_category
+    from product_category where  category_name like concat("%",#{categoryName},"%")
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from product_category
