@@ -29,6 +29,8 @@ class IProductServicesTest {
     @Test
     void getAll() {
         List<ProductCategory> productCategoryList = productServices.getAll(0,5 ,"家居");
+        productServices.getAll(0,5 ,"家居");
+        productServices.getAll(0,5 ,"家居");
         System.out.printf(" total result is %d",productCategoryList.size());
     }
 }
