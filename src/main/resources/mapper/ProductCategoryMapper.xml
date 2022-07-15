@@ -18,7 +18,7 @@
     from product_category
     where category_id = #{categoryId,jdbcType=INTEGER}
   </select>
-  <select id="findAll" resultType="java.util.List">
+  <select id="findAll" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from product_category

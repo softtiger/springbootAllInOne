@@ -1,6 +1,10 @@
 package self.eshop.services.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.ListOperations;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import self.eshop.dao.ProductCategoryMapper;
 import self.eshop.services.IProductServices;
@@ -14,7 +18,13 @@ import java.util.List;
 public class ProductServices implements IProductServices {
 
 
-    //private RedisTemplate  redisTemplate;
+    @Autowired
+    private RedisTemplate redisTemplate;
+
+
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+
     @Autowired
     private ProductCategoryMapper productCategoryDao;
 
@@ -30,12 +40,15 @@ public class ProductServices implements IProductServices {
 
     @Override
     public List<ProductCategory> getAll() {
-      //  List<ProductCategory> result =  (List<ProductCategory>)redisTemplate.opsForValue().get(PRODUCT_CATEGORY_KEY);
-      //  if  (null == result){
-      //        result = productCategoryDao.findAll();
-      //        redisTemplate.opsForValue().set(PRODUCT_CATEGORY_KEY,result, Duration.ofSeconds(PRODUCT_CATEGORY_TIMEOUT));
-      //  }
-        return productCategoryDao.findAll();
+        List<ProductCategory> result =  (List<ProductCategory>)redisTemplate.opsForValue().get(PRODUCT_CATEGORY_KEY);
+
+        if  (null == result){
+              result = productCategoryDao.findAll();
+              redisTemplate.opsForValue().set(PRODUCT_CATEGORY_KEY,result, Duration.ofSeconds(PRODUCT_CATEGORY_TIMEOUT));
+
+              stringRedisTemplate.opsForValue().set(PRODUCT_CATEGORY_KEY+"_STRING","use StringRedisTemplate");
+        }
+        return result;
 
     }
 }
