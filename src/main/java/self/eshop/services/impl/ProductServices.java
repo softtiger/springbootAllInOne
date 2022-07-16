@@ -21,10 +21,6 @@ public class ProductServices implements IProductServices {
     @Autowired
     private RedisTemplate redisTemplate;
 
-
-    @Autowired
-    private StringRedisTemplate stringRedisTemplate;
-
     @Autowired
     private ProductCategoryMapper productCategoryDao;
 
@@ -44,9 +40,10 @@ public class ProductServices implements IProductServices {
 
         if  (null == result){
               result = productCategoryDao.findAll();
+
               redisTemplate.opsForValue().set(PRODUCT_CATEGORY_KEY,result, Duration.ofSeconds(PRODUCT_CATEGORY_TIMEOUT));
 
-              stringRedisTemplate.opsForValue().set(PRODUCT_CATEGORY_KEY+"_STRING","use StringRedisTemplate");
+              redisTemplate.opsForValue().set(PRODUCT_CATEGORY_KEY+"_STRING","use StringRedisTemplate");
         }
         return result;
 

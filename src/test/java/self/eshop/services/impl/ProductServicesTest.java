@@ -1,12 +1,14 @@
 package self.eshop.services.impl;
 
 import org.junit.jupiter.api.Test;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import self.eshop.domain.ProductCategory;
 import self.eshop.services.IProductServices;
 
 import java.sql.Date;
+import java.util.List;
 
 @SpringBootTest
 class ProductServicesTest {
@@ -27,6 +29,8 @@ class ProductServicesTest {
 
     @Test
     void getAll() {
-        productServices.getAll();
+        List<ProductCategory> productCategoryList = productServices.getAll();
+        ProductCategory productCategory = productCategoryList.get(1);
+        LoggerFactory.getLogger(this.getClass()).info(" productCategoryName:{}",productCategory.getCategoryName());
     }
 }

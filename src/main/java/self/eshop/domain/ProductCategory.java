@@ -14,6 +14,16 @@ public class ProductCategory implements Serializable {
 
     private Date updateTime;
 
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    private String note;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getCategoryId() {
