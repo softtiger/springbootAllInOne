@@ -1,11 +1,36 @@
 spring:
   application:
     name: eshop
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+    deserialization:
+      
   datasource:
     url: jdbc:mysql://rm-bp1p3t174nt16i896ko.mysql.rds.aliyuncs.com:9876/warehouse?useUnicode=true&characterEncoding=utf-8&useSSL=false
     username: dev
     password: Wyfdgg72
     driver-class-name: com.mysql.cj.jdbc.Driver
+  redis:
+    host: 175.24.230.109
+    port: 9399
+    password: helloTcent2022
+
+    #max num of the connection instance
+    pool:
+      max-active: 200
+      #max num of the free connection instance
+      max-idle: 40
+      #max wait time(seconds)
+      max_wait: 1000
+      #timeout(mico seconds)
+      timeout: 4000
+
+      #available instance
+      test_on_borrow: true
+
+      minEvictableIdleTimeMillis: 10000
+      timeBetweenEvictionRunsMillis: 15000
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml

@@ -5,8 +5,9 @@ import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import self.eshop.dao.ProductCategoryMapper;
 import self.eshop.services.IProductServices;
 import self.eshop.domain.ProductCategory;
@@ -23,20 +24,22 @@ public class ProductServices implements IProductServices {
 
 
     @Override
+    @CacheEvict(cacheNames="productCategory",allEntries = true)
     public void addProductCategory(ProductCategory productCategory) {
         productCategoryDao.insert(productCategory);
     }
 
     @Override
+    @Cacheable(cacheNames = "productCategory",key = "#pageNo+\":\"+#pageSize+\":\"+#categoryName")
     public List<ProductCategory> getAll(int pageNo, int pageSize, String categoryName) {
-        logger.info("request parameter---pageNo:{}, pageSize:{},categoryName:{}",pageNo,pageSize,categoryName);
         PageHelper.startPage(pageNo,pageSize);
         List<ProductCategory> productCategoryList = productCategoryDao.findAll(categoryName);
 
-        productCategoryDao.findAll(categoryName);
-
         PageInfo<ProductCategory> pageInfo = new PageInfo<>(productCategoryList);
         logger.info("total page:{},total number:{}", pageInfo.getPages(),pageInfo.getTotal());
+
         return productCategoryList;
+
     }
+
 }
