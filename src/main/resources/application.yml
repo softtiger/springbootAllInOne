@@ -4,7 +4,6 @@ spring:
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
-    deserialization:
       
   datasource:
     url: jdbc:mysql://rm-bp1p3t174nt16i896ko.mysql.rds.aliyuncs.com:9876/warehouse?useUnicode=true&characterEncoding=utf-8&useSSL=false

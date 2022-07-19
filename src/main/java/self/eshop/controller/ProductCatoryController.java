@@ -24,7 +24,9 @@ public class ProductCatoryController {
 
     @RequestMapping("/nextPage/{pageNo}/{pageSize}")
     public List<ProductCategory> getProductCatories(@PathVariable Integer pageNo,@PathVariable Integer pageSize){
-           return productServices.getAll(pageNo,pageSize,"数码");
+            List<ProductCategory> result =productServices.getAll(pageNo,pageSize,"数码");
+            logger.info("in next page controller");
+            return result;
     }
 
     @RequestMapping("greet")

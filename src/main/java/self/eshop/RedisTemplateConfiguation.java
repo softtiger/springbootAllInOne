@@ -13,11 +13,14 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.cache.RedisCacheManagerBuilderCustomizer;
+import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
+import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.stereotype.Component;
 
@@ -27,24 +30,48 @@ import java.util.Date;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 public class RedisTemplateConfiguation {
 
     @Bean
-    public RedisCacheManagerBuilderCustomizer myRedisCacheManagerBuilderCustomizer() {
-        return (builder) -> builder
-                .withCacheConfiguration("productCategory",
-                        RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofSeconds(100)))
-                .withCacheConfiguration("cache2",
-                        RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofMinutes(1)));
-
+    public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory){
+        RedisCacheManager cacheManager = RedisCacheManager.builder(redisConnectionFactory)
+                .cacheDefaults(defaultCacheConfig(1000))
+                .withInitialCacheConfigurations(initCacheManager())
+                .transactionAware()
+                .build();
+        return cacheManager;
     }
 
-    @Bean
+    private Map<String, RedisCacheConfiguration> initCacheManager() {
+            Map<String,RedisCacheConfiguration>  cacheConfigurationMap = new HashMap<String, RedisCacheConfiguration>();
+            cacheConfigurationMap.put("productCategory",this.defaultCacheConfig(100));
+            return cacheConfigurationMap;
+    }
+
+    private RedisCacheConfiguration defaultCacheConfig(int second){
+
+        RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig()
+                .entryTtl(Duration.ofSeconds(second)).serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
+                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(getJackson2JsonRedisSerializer()));
+        return config;
+    }
+
+
+    /*
     public RedisTemplate<String,?> redisTemplate(RedisConnectionFactory redisConnectionFactory){
         RedisTemplate<String, ?> template = new RedisTemplate<>();
         template.setKeySerializer(new StringRedisSerializer());
+        Jackson2JsonRedisSerializer valueSerializer = getJackson2JsonRedisSerializer();
+        template.setValueSerializer(valueSerializer);
+        template.setConnectionFactory(redisConnectionFactory);
+        return template;
+    }*/
+
+    private Jackson2JsonRedisSerializer getJackson2JsonRedisSerializer() {
         Jackson2JsonRedisSerializer valueSerializer =new Jackson2JsonRedisSerializer<Object>(Object.class);
 
         ObjectMapper om = new ObjectMapper();
@@ -61,10 +88,9 @@ public class RedisTemplateConfiguation {
         simpleModule.addDeserializer(Date.class, new JodaDateJsonDeserializer());
         om.registerModule(simpleModule);
         valueSerializer.setObjectMapper(om);
-        template.setValueSerializer(valueSerializer);
-        template.setConnectionFactory(redisConnectionFactory);
-        return template;
+        return valueSerializer;
     }
+
 
     class JodaDateJsonSerializer extends JsonSerializer<Date> {
         @Override
